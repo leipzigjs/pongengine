@@ -35,9 +35,13 @@ function startGame(req, res, next) {
   res.send('game started');
 }
 
+function status(req, res, next) {
+  res.send(game);
+}
+
 var server = restify.createServer();
 server.get('/game/start/', startGame);
-server.get('/game/status/', function(req, res, next) { res.send(game); });
+server.get('/game/status/', status);
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);

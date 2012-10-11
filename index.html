@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Coding Contest - Pong</title>
+    <style>
+      #myCanvas { 
+        border: 1px solid black;
+        background: red
+      }
+    </style>
+    <script>
+      (function() {
+        var canvas;
+        var context;
+        var x, y;
+        var radius = 10
+
+        function circle(x, y, radius, color) {
+          context.beginPath();
+          context.arc(x, y, radius, 0, 2 * Math.PI, false);
+          context.fillStyle = color;
+          context.fill();
+        }
+
+        function updateField(err, status)
+        {
+          if (status) {
+            console.log(status);
+            circle(x, y, radius+1, 'white');
+            x = status.ball[0];
+            y = status.ball[1];
+            circle(x, y, radius, 'green');
+          }
+          setTimeout(function() {
+            requestStatus(updateField);
+          }, 10);
+        }
+
+        function requestStatus(statusDone) {
+          var request = new XMLHttpRequest(); 
+          request.open('GET', 'http://localhost:8080/game/status/', true); 
+          request.onreadystatechange = function () { 
+            if (request.readyState != 4 || request.status != 200) {
+              return;
+            }
+            statusDone(null, JSON.parse(request.responseText));
+          }; 
+          request.send();
+        }
+
+        window.onload = function(){
+          canvas = document.getElementById("field");
+          context = canvas.getContext("2d");
+          updateField();
+        };
+      }());
+    </script>
+  </head>
+  <body onmousedown="return false;">
+    <canvas id="field" width="800" height="600">
+    </canvas>
+  </body>
+</html>

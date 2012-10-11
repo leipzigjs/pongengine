@@ -13,7 +13,10 @@
         var canvas;
         var context;
         var x, y;
+        var paddleLeft, paddleRight;
         var radius = 10
+
+        var config;
 
         function circle(x, y, radius, color) {
           context.beginPath();
@@ -22,27 +25,52 @@
           context.fill();
         }
 
+        function rectangle(x, y, width, height, color) {
+          context.beginPath();
+          context.rect(x, y, width, height);
+          context.fillStyle = color;
+          context.fill();
+        }
+
         function updateField(err, status)
         {
           if (status) {
             circle(x, y, radius+1, 'white');
+            rectangle(0, paddleLeft-config.PADDLE_HEIGHT, 
+                      config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'white');
+            rectangle(400, paddleRight-config.PADDLE_HEIGHT, 
+                      config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'white');
             x = status.ball[0];
             y = status.ball[1];
+            paddleLeft = status.paddleLeft;
+            paddleRight = status.paddleRight;
             circle(x, y, radius, 'green');
+            rectangle(0, paddleLeft-config.PADDLE_HEIGHT, 
+                      config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'red');
+            rectangle(400, paddleRight-config.PADDLE_HEIGHT, 
+                      config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'blue');
           }
           setTimeout(function() {
             requestStatus(updateField);
           }, 10);
         }
 
+        function requestConfig(configDone) {
+          request('game/config/', configDone);
+        }
+
         function requestStatus(statusDone) {
+          request('game/status/', statusDone);
+        }
+
+        function request(url, requestDone) {
           var request = new XMLHttpRequest(); 
-          request.open('GET', 'http://localhost:8080/game/status/', true); 
+          request.open('GET', 'http://localhost:8080/'+ url, true); 
           request.onreadystatechange = function () { 
             if (request.readyState != 4 || request.status != 200) {
               return;
             }
-            statusDone(null, JSON.parse(request.responseText));
+            requestDone(null, JSON.parse(request.responseText));
           }; 
           request.send();
         }
@@ -50,7 +78,10 @@
         window.onload = function(){
           canvas = document.getElementById("field");
           context = canvas.getContext("2d");
-          updateField();
+          requestConfig(function(err, newConfig) {
+            config = newConfig; 
+            updateField();
+          });
         };
       }());
     </script>

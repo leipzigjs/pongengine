@@ -3,7 +3,8 @@ var restify = require('restify');
 var FIELD_HEIGHT = 300;
 var FIELD_WIDTH = 300;
 
-var INITIAL_BALL_SPEED = 5;
+var TIME_QUANTUM = 10;
+var INITIAL_BALL_SPEED = 1;
 
 function random(value) {
   return Math.random() * value * 2 - value;
@@ -20,12 +21,15 @@ var game = {
     setTimeout(this.run.bind(this), 100);
   },
   run: function() {
+    if (this.ball[0] >= FIELD_HEIGHT || this.ball[0] <= 0) {
+      this.ballDelta[0] *= -1;
+    }
     if (this.ball[1] >= FIELD_HEIGHT || this.ball[1] <= 0) {
       this.ballDelta[1] *= -1;
     }
     this.ball[0] += this.ballDelta[0];
     this.ball[1] += this.ballDelta[1];
-    setTimeout(this.run.bind(this), 100);
+    setTimeout(this.run.bind(this), TIME_QUANTUM);
     console.log(this.ball);
   }
 };

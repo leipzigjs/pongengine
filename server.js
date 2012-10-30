@@ -32,18 +32,24 @@ function login(req, res, next) {
   }
 }
 
-function moveUp(req, res, next) {
-  var game = gameByKey(req.params.key);
-  success = game.moveUp(req.params.playername);
-  if (success) {
-    res.send('ok');
-    return
-  }
-  res.error('not your game!');
-}
-
 function moveDown(req, res, next) {
   var game = gameByKey(req.params.key);
+  try {
+    game.moveDown(req.params.playername, req.params.secret);
+    res.send('ok');
+  } catch (e) {
+    res.send(e.message);
+  }
+}
+
+function moveUp(req, res, next) {
+  var game = gameByKey(req.params.key);
+  try {
+    game.moveUp(req.params.playername, req.params.secret);
+    res.send('ok');
+  } catch (e) {
+    res.send(e.message);
+  }
 }
 
 var server = restify.createServer();
@@ -51,8 +57,8 @@ server.get('/game/:key/config/', getConfig);
 server.get('/game/:key/start/', startGame);
 server.get('/game/:key/status/', getStatus);
 server.get('/game/:key/login/:playername/', login);
-server.put('/game/:key/up/:playername/', moveUp);
-server.put('/game/:key/down/:playername/', moveDown);
+server.put('/game/:key/up/:playername/:secret', moveUp);
+server.put('/game/:key/down/:playername/:secret', moveDown);
 
 server.listen(8001, function() {
   console.log('%s listening at %s', server.name, server.url);

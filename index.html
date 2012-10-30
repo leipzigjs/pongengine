@@ -65,8 +65,8 @@
 
         function request(url, requestDone) {
           var request = new XMLHttpRequest(); 
-          request.open('GET', 'http://localhost:8080/'+ url, true); 
-          request.onreadystatechange = function () { 
+          request.open('GET', 'http://localhost:8001/'+ url, true); ;
+          request.onreadystatechange = function () { ;
             if (request.readyState != 4 || request.status != 200) {
               return;
             }

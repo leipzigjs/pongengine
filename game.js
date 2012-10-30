@@ -7,10 +7,11 @@ var config = {
 
   PADDLE_HEIGHT: 70,
   PADDLE_WIDTH: 20,
+  PADDLE_STEP: 20,
 
   TIME_QUANTUM: 10,
   INITIAL_BALL_SPEED: 5,
-  WAIT_BEFORE_START: 1000
+  WAIT_BEFORE_START: 1000,
 };
 
 var STATUS_LOGIN = 'login';
@@ -34,7 +35,7 @@ var Game = function Game(customConfig) {
 
 Game.prototype.start = function start() {
   this.status = STATUS_STARTED;
-  this.ball = [config.FIELD_WIDTH / 2, config.FIELD_HEIGHT /2];;
+  this.ball = [config.FIELD_WIDTH / 2, config.FIELD_HEIGHT /2];
   this.ballDelta = [random(config.INITIAL_BALL_SPEED), random(config.INITIAL_BALL_SPEED)];
   setTimeout(this.run.bind(this), 100);
 };
@@ -78,6 +79,28 @@ Game.prototype.loginPlayer = function loginPlayer(playername) {
     this.players.left = player;
   }
   return player;
+};
+
+Game.prototype.moveDown = function moveDown(playername, secret) {
+  this.move(playername, secret, config.PADDLE_STEP);
+};
+
+Game.prototype.moveUp = function moveUp(playername, secret) {
+  this.move(playername, secret, -config.PADDLE_STEP);
+};
+
+Game.prototype.move = function move(playername, secret, distance) {
+  if (this.players.left.name === playername && 
+      this.players.left.secret === secret) {
+    this.paddleLeft += distance;
+    return;
+  }
+  if (this.players.right.name === playername &&
+      this.players.right.secret === secret) {
+    this.paddleRight += distance;
+    return;
+  }
+  throw Error('not your game');
 };
 
 Game.prototype.config = config;

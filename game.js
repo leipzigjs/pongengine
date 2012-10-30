@@ -20,7 +20,8 @@ var STATUS_STARTED = 'started';
 var STATUS_FINISHED = 'finshed';
 
 function random(value) {
-  return Math.random() * value * 2 - value;
+  direction = Math.random() < 0.5 ? -1 : 1;
+  return direction * (Math.random() * value / 2 + value / 2);
 }
 
 var Game = function Game(customConfig) {

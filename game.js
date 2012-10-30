@@ -9,8 +9,14 @@ var config = {
   PADDLE_WIDTH: 20,
 
   TIME_QUANTUM: 10,
-  INITIAL_BALL_SPEED: 5
+  INITIAL_BALL_SPEED: 5,
+  WAIT_BEFORE_START: 1000
 };
+
+var STATUS_LOGIN = 'login';
+var STATUS_READY = 'ready';
+var STATUS_STARTED = 'started';
+var STATUS_FINISHED = 'finshed';
 
 function random(value) {
   return Math.random() * value * 2 - value;
@@ -22,13 +28,16 @@ var Game = function Game(customConfig) {
   this.paddleLeft = config.FIELD_HEIGHT / 2;
   this.paddleRight = config.FIELD_HEIGHT / 2;
   this.players = [];
-}
+  this.status = STATUS_LOGIN;
+  this.autoStart = true;
+};
 
 Game.prototype.start = function start() {
-  this.ball = [config.FIELD_WIDTH / 2, config.FIELD_HEIGHT /2];
+  this.status = STATUS_STARTED;
+  this.ball = [config.FIELD_WIDTH / 2, config.FIELD_HEIGHT /2];;
   this.ballDelta = [random(config.INITIAL_BALL_SPEED), random(config.INITIAL_BALL_SPEED)];
   setTimeout(this.run.bind(this), 100);
-}
+};
 
 Game.prototype.run = function run() {
   if (this.ball[0] >= config.FIELD_WIDTH - config.FIELD_PADDING_X) {
@@ -49,18 +58,23 @@ Game.prototype.run = function run() {
   this.ball[0] += this.ballDelta[0];
   this.ball[1] += this.ballDelta[1];
   setTimeout(this.run.bind(this), config.TIME_QUANTUM);
-}
+};
 
 Game.prototype.loginPlayer = function loginPlayer(playername) {
   if (this.players.length <=2) {
     player = {
       'name': playername,
-      'secret': '123'
+      'secret': '123' //TODO create random string
     };
     this.players.push(player);
+    if (this.autoStart && this.players.length == 2) {
+      this.status = STATUS_READY;
+      setTimeout(this.start.bind(this), config.WAIT_BEFORE_START);
+    }
     return player;
   }
-}
-Game.prototype.config = config
+};
+
+Game.prototype.config = config;
 
 module.exports = Game;

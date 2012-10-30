@@ -24,13 +24,12 @@ function getStatus(req, res, next) {
 
 function login(req, res, next) {
   var game = gameByKey(req.params.key);
-  if (game.players.length < 2) {
+  try {
     player = game.loginPlayer(req.params.playername);
     res.send(player.secret);
-    return;
+  } catch (e) {
+    res.send(e.message);
   }
-  res.send('game full');
-
 }
 
 function moveUp(req, res, next) {

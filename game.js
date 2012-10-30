@@ -27,7 +27,7 @@ var Game = function Game(customConfig) {
   this.ballDelta = [0, 0];
   this.paddleLeft = config.FIELD_HEIGHT / 2;
   this.paddleRight = config.FIELD_HEIGHT / 2;
-  this.players = [];
+  this.players = {'left': null, 'right': null};
   this.status = STATUS_LOGIN;
   this.autoStart = true;
 };
@@ -61,18 +61,23 @@ Game.prototype.run = function run() {
 };
 
 Game.prototype.loginPlayer = function loginPlayer(playername) {
-  if (this.players.length <=2) {
-    player = {
-      'name': playername,
-      'secret': '123' //TODO create random string
-    };
-    this.players.push(player);
-    if (this.autoStart && this.players.length == 2) {
+  if (this.players.right) {
+    throw Error('game full');
+  }
+  player = {
+    'name': playername,
+    'secret': '123' //TODO create random string
+  };
+  if (this.players.left) {
+    this.players.right = player;
+    if (this.autoStart) {
       this.status = STATUS_READY;
       setTimeout(this.start.bind(this), config.WAIT_BEFORE_START);
     }
-    return player;
+  } else {
+    this.players.left = player;
   }
+  return player;
 };
 
 Game.prototype.config = config;

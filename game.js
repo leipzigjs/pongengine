@@ -21,6 +21,7 @@ var Game = function Game(customConfig) {
   this.ballDelta = [0, 0];
   this.paddleLeft = config.FIELD_HEIGHT / 2;
   this.paddleRight = config.FIELD_HEIGHT / 2;
+  this.players = [];
 }
 
 Game.prototype.start = function start() {
@@ -50,6 +51,16 @@ Game.prototype.run = function run() {
   setTimeout(this.run.bind(this), config.TIME_QUANTUM);
 }
 
+Game.prototype.loginPlayer = function loginPlayer(playername) {
+  if (this.players.length <=2) {
+    player = {
+      'name': playername,
+      'secret': '123'
+    };
+    this.players.push(player);
+    return player;
+  }
+}
 Game.prototype.config = config
 
 module.exports = Game;

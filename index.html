@@ -36,19 +36,19 @@
         {
           if (status) {
             circle(x, y, radius+1, 'white');
-            rectangle(0, paddleLeft-config.PADDLE_HEIGHT, 
+            rectangle(0, paddleLeft-config.PADDLE_HEIGHT/2, 
                       config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'white');
-            rectangle(config.FIELD_WIDTH, paddleRight-config.PADDLE_HEIGHT, 
+            rectangle(config.FIELD_WIDTH, paddleRight-config.PADDLE_HEIGHT/2, 
                       config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'white');
             x = status.ball[0];
             y = status.ball[1];
             paddleLeft = status.paddleLeft;
             paddleRight = status.paddleRight;
             circle(x, y, radius, 'green');
-            rectangle(0, paddleLeft-config.PADDLE_HEIGHT, 
+            rectangle(0, paddleLeft-config.PADDLE_HEIGHT/2, 
                       config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'red');
             rectangle(config.FIELD_WIDTH-config.PADDLE_WIDTH, 
-                      paddleRight-config.PADDLE_HEIGHT, 
+                      paddleRight-config.PADDLE_HEIGHT/2, 
                       config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'blue');
           }
           setTimeout(function() {

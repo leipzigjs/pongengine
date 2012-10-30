@@ -8,6 +8,7 @@ var config = {
   PADDLE_HEIGHT: 70,
   PADDLE_WIDTH: 20,
   PADDLE_STEP: 20,
+  ACCELORATOR: 10,
 
   TIME_QUANTUM: 10,
   INITIAL_BALL_SPEED: 5,
@@ -42,11 +43,14 @@ Game.prototype.start = function start() {
 };
 
 Game.prototype.run = function run() {
-  if (this.ball[0] >= config.FIELD_WIDTH - config.FIELD_PADDING_X) {
-    if (this.ball[1] > this.paddleRight - config.PADDLE_HEIGHT/2 || 
+  if (this.ball[0] >= config.FIELD_WIDTH - config.FIELD_PADDING_X - config.PADDLE_WIDTH) {
+    if (this.ball[1] > this.paddleRight - config.PADDLE_HEIGHT/2 &&
         this.ball[1] < this.paddleRight + config.PADDLE_HEIGHT/2) {
           this.ballDelta[0] *= -1;
-        }
+          this.ballDelta[1] += (this.ball[1] - this.paddleRight) / config.ACCELORATOR
+    } else if (this.ball[0] >= config.FIELD_WIDTH - config.FIELD_PADDING_X) {
+      this.ballDelta[0] *= -1;
+    }
   }
 
   if(this.ball[0] <= config.FIELD_PADDING_X) {

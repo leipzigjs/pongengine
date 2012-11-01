@@ -11,7 +11,7 @@ var config = {
   ACCELORATOR: 10,
 
   TIME_QUANTUM: 10,
-  INITIAL_BALL_SPEED: 5,
+  INITIAL_BALL_SPEED: 2,
   WAIT_BEFORE_START: 1000,
 };
 
@@ -21,7 +21,7 @@ var STATUS_STARTED = 'started';
 var STATUS_FINISHED = 'finshed';
 
 function random(value) {
-  direction = Math.random() < 0.5 ? -1 : 1;
+  var direction = Math.random() < 0.5 ? -1 : 1;
   return direction * (Math.random() * value / 2 + value / 2);
 }
 
@@ -39,7 +39,7 @@ Game.prototype.start = function start() {
   this.status = STATUS_STARTED;
   this.ball = [config.FIELD_WIDTH / 2, config.FIELD_HEIGHT /2];
   this.ballDelta = [random(config.INITIAL_BALL_SPEED), random(config.INITIAL_BALL_SPEED)];
-  setTimeout(this.run.bind(this), 100);
+  this.run();
 };
 
 Game.prototype.run = function run() {
@@ -47,7 +47,7 @@ Game.prototype.run = function run() {
     if (this.ball[1] > this.paddleRight - config.PADDLE_HEIGHT/2 &&
         this.ball[1] < this.paddleRight + config.PADDLE_HEIGHT/2) {
           this.ballDelta[0] *= -1;
-          this.ballDelta[1] += (this.ball[1] - this.paddleRight) / config.ACCELORATOR
+          this.ballDelta[1] += (this.ball[1] - this.paddleRight) / config.ACCELORATOR;
     } else if (this.ball[0] >= config.FIELD_WIDTH - config.FIELD_PADDING_X) {
       this.ballDelta[0] *= -1;
     }
@@ -70,7 +70,7 @@ Game.prototype.loginPlayer = function loginPlayer(playername) {
   if (this.players.right) {
     throw Error('game full');
   }
-  player = {
+  var player = {
     'name': playername,
     'secret': '123' //TODO create random string
   };
@@ -97,14 +97,14 @@ Game.prototype.moveUp = function moveUp(playername, secret) {
 Game.prototype.move = function move(playername, secret, distance) {
   if (this.players.left.name === playername && 
       this.players.left.secret === secret) {
-    this.paddleLeft += distance;
-    return;
-  }
+        this.paddleLeft += distance;
+        return;
+      }
   if (this.players.right.name === playername &&
       this.players.right.secret === secret) {
-    this.paddleRight += distance;
-    return;
-  }
+        this.paddleRight += distance;
+        return;
+      }
   throw Error('not your game');
 };
 

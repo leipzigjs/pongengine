@@ -45,6 +45,18 @@ describe('Game', function() {
     setTimeout(function() {
       expect(game.status).to.equal('started');
       done();
-    }, 20);
+    }, 10);
+  });
+
+  it('should move the ball when game runs', function(done) {
+    game.config.WAIT_BEFORE_START = 0;
+    game.config.TIME_QUANTUM = 0;
+    var pos = game.ball;
+    game.loginPlayer('left');
+    game.loginPlayer('right');
+    setTimeout(function() {
+      expect(game.ball[0]).to.not.equal(pos[0]);
+      done();
+    }, 10);
   });
 });

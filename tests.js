@@ -36,7 +36,7 @@ describe('Game', function() {
   });
 
   it('should start the game, if two players log in', function(done) {
-    game.config.WAIT_BEFORE_START = 10
+    game.config.WAIT_BEFORE_START = 10;
     expect(game).to.have.property('status');
     expect(game.status).to.equal('login');
     game.loginPlayer('left');

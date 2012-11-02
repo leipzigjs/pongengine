@@ -25,6 +25,18 @@ function random(value) {
   return direction * (Math.random() * value / 2 + value / 2);
 }
 
+// thanks stack overflow
+// see http://stackoverflow.com/questions/1349404
+function createSecret(length) {
+    length = length || 5;
+    var secret = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    for(var i = 0; i < length; i++) {
+        secret += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return secret;
+}
+
 var Game = function Game(customConfig) {
   this.ball = [config.FIELD_WIDTH / 2, config.FIELD_HEIGHT /2];
   this.ballDelta = [0, 0];
@@ -72,7 +84,7 @@ Game.prototype.loginPlayer = function loginPlayer(playername) {
   }
   var player = {
     'name': playername,
-    'secret': '123' //TODO create random string
+    'secret': createSecret()
   };
   if (this.players.left) {
     this.players.right = player;

@@ -48,15 +48,35 @@ describe('Game', function() {
     }, 10);
   });
 
-  it('should move the ball when game runs', function(done) {
-    game.config.WAIT_BEFORE_START = 0;
-    game.config.TIME_QUANTUM = 0;
-    var pos = game.ball;
-    game.loginPlayer('left');
-    game.loginPlayer('right');
-    setTimeout(function() {
-      expect(game.ball[0]).to.not.equal(pos[0]);
-      done();
-    }, 10);
+  describe('Ball', function() {
+    it('should move when game runs', function(done) {
+      game.config.WAIT_BEFORE_START = 0;
+      game.config.TIME_QUANTUM = 1;
+      var pos = game.ball;
+      game.loginPlayer('left');
+      game.loginPlayer('right');
+      setTimeout(function() {
+        expect(game.ball[0]).to.not.equal(pos[0]);
+        done();
+      }, 10);
+    });
+
+    it('should be reflected on top of the field', function(done) {
+      game.config.WAIT_BEFORE_START = 0;
+      game.config.TIME_QUANTUM = 1;
+      game.run();
+      game.ballDelta = [0, -2];
+      game.ball = [100, 15];
+      setTimeout(function() {
+        expect(game.ballDelta[1]).to.be.below(0);
+        expect(game.ball[1]).to.be.below(15);
+        setTimeout(function() {
+          expect(game.ballDelta[1]).to.be.above(0);
+          expect(game.ball[1]).to.be.above(15);
+          done();
+        }, 8);
+      }, 5);
+    });
   });
+
 });

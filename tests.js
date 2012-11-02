@@ -48,6 +48,22 @@ describe('Game', function() {
     }, 10);
   });
 
+  describe('Paddle', function() {
+    it('should move, but only by player with secret', function () {
+      var playerLeft = game.loginPlayer('left');
+      var playerRight = game.loginPlayer('left');
+      var posLeft = game.paddleLeft;
+      var posRight = game.paddleLeft;
+      game.moveDown(playerLeft.name, playerLeft.secret);
+      expect(game.paddleLeft).to.be.above(posLeft);
+      game.moveUp(playerRight.name, playerRight.secret);
+      expect(game.paddleRight).to.be.below(posRight);
+      expect(function() {
+        game.moveUp(player.name, 'x');
+      }).to.throw.error;
+    });
+  });
+
   describe('Ball', function() {
     it('should move when game runs', function(done) {
       game.config.WAIT_BEFORE_START = 0;
@@ -74,9 +90,8 @@ describe('Game', function() {
           expect(game.ballDelta[1]).to.be.above(0);
           expect(game.ball[1]).to.be.above(15);
           done();
-        }, 8);
+        }, 10);
       }, 5);
     });
   });
-
 });

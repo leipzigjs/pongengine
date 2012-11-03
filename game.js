@@ -2,8 +2,7 @@ var config = {
   FIELD_HEIGHT: 300,
   FIELD_WIDTH: 300,
 
-  FIELD_PADDING_X: 10,
-  FIELD_PADDING_Y: 10,
+  BALL_RADIUS: 10,
 
   PADDLE_HEIGHT: 70,
   PADDLE_WIDTH: 20,
@@ -52,30 +51,39 @@ Game.prototype.start = function start() {
   this.ball = [config.FIELD_WIDTH / 2, config.FIELD_HEIGHT /2];
   this.ballDelta = [random(config.INITIAL_BALL_SPEED), random(config.INITIAL_BALL_SPEED)];
   this.run();
+  return this;
 };
 
-Game.prototype.run = function run() {
-  if (this.ball[0] >= config.FIELD_WIDTH - config.FIELD_PADDING_X - config.PADDLE_WIDTH) {
+
+Game.prototype.step = function step() {
+  if (this.ball[0] >= config.FIELD_WIDTH - config.BALL_RADIUS - config.PADDLE_WIDTH) {
     if (this.ball[1] > this.paddleRight - config.PADDLE_HEIGHT/2 &&
         this.ball[1] < this.paddleRight + config.PADDLE_HEIGHT/2) {
           this.ballDelta[0] *= -1;
           this.ballDelta[1] += (this.ball[1] - this.paddleRight) / config.ACCELORATOR;
-    } else if (this.ball[0] >= config.FIELD_WIDTH - config.FIELD_PADDING_X) {
-      this.ballDelta[0] *= -1;
+    }
+  }
+  if (this.ball[0] <= config.BALL_RADIUS + config.PADDLE_WIDTH) {
+    if (this.ball[1] > this.paddleLeft - config.PADDLE_HEIGHT/2 &&
+        this.ball[1] < this.paddleLeft + config.PADDLE_HEIGHT/2) {
+          this.ballDelta[0] *= -1;
+          this.ballDelta[1] += (this.ball[1] - this.paddleLeft) / config.ACCELORATOR;
     }
   }
 
-  if(this.ball[0] <= config.FIELD_PADDING_X) {
-    this.ballDelta[0] *= -1;
-  }
-
-  if (this.ball[1] >= config.FIELD_HEIGHT - config.FIELD_PADDING_Y || 
-      this.ball[1] <= config.FIELD_PADDING_Y) {
+  if (this.ball[1] >= config.FIELD_HEIGHT - config.BALL_RADIUS || 
+      this.ball[1] <= config.BALL_RADIUS) {
         this.ballDelta[1] *= -1;
       }
   this.ball[0] += this.ballDelta[0];
   this.ball[1] += this.ballDelta[1];
+  return this;
+}
+
+Game.prototype.run = function run() {
+  this.step();
   setTimeout(this.run.bind(this), config.TIME_QUANTUM);
+  return this;
 };
 
 Game.prototype.loginPlayer = function loginPlayer(playername) {

@@ -77,21 +77,64 @@ describe('Game', function() {
       }, 10);
     });
 
-    it('should be reflected on top of the field', function(done) {
-      game.config.WAIT_BEFORE_START = 0;
-      game.config.TIME_QUANTUM = 1;
-      game.run();
-      game.ballDelta = [0, -2];
-      game.ball = [100, 15];
-      setTimeout(function() {
-        expect(game.ballDelta[1]).to.be.below(0);
-        expect(game.ball[1]).to.be.below(15);
-        setTimeout(function() {
-          expect(game.ballDelta[1]).to.be.above(0);
-          expect(game.ball[1]).to.be.above(15);
-          done();
-        }, 10);
-      }, 5);
+    it('should be reflected on top of the field', function() {
+      game.ballDelta = [0, -1];
+      var y = game.config.BALL_RADIUS;
+      game.ball = [100, y];
+      game.step();
+      expect(game.ballDelta).to.be.eql([0, 1]);
+      expect(game.ball[1]).to.be.above(y);
+    });
+
+    it('should be reflected on bottom of the field', function() {
+      game.ballDelta = [0, 1];
+      var y = game.config.FIELD_HEIGHT - game.config.BALL_RADIUS;
+      game.ball = [100, y];
+      game.step();
+      expect(game.ballDelta).to.be.eql([0, -1]);
+      expect(game.ball[1]).to.be.below(y);
+    });
+
+    it('should be reflected on left paddle', function() {
+      game.ballDelta = [-1, 0];
+      game.paddleLeft = 100;
+      var x = game.config.BALL_RADIUS + game.config.PADDLE_WIDTH;
+      game.ball = [x, 100];
+      game.step();
+      expect(game.ballDelta).to.be.eql([1, 0]);
+      expect(game.ball[0]).to.be.above(x);
+    });
+
+    it('should not be reflected if left paddle is not in position', function() {
+      game.ballDelta = [-1, 0];
+      game.paddleLeft = 0;
+      var x = game.config.BALL_RADIUS + game.config.PADDLE_WIDTH;
+      game.ball = [x, 100];
+      game.step();
+      expect(game.ballDelta).to.be.eql([-1, 0]);
+      expect(game.ball[0]).to.be.below(x);
+    });
+
+    it('should be reflected on right paddle', function() {
+      game.ballDelta = [1, 0];
+      game.paddleRight = 100;
+      var x = game.config.FIELD_WIDTH - game.config.BALL_RADIUS -
+              game.config.PADDLE_WIDTH;
+      game.ball = [x, 100];
+      game.step();
+      expect(game.ballDelta).to.be.eql([-1, 0]);
+      expect(game.ball[0]).to.be.below(x);
+    });
+
+    it('should not be reflected if right paddle is not in position', function() {
+      game.ballDelta = [1, 0];
+      game.paddleRight = 0;
+      var x = game.config.FIELD_WIDTH - game.config.BALL_RADIUS -
+              game.config.PADDLE_WIDTH;
+      game.ball = [x, 100];
+      game.step();
+      expect(game.ballDelta).to.be.eql([1, 0]);
+      expect(game.ball[0]).to.be.above(x);
     });
   });
 });

@@ -51,11 +51,17 @@ var Game = function Game(customConfig) {
   this.autoStart = true;
   this.leftMoveCounter = 0;
   this.rightMoveCounter = 0;
+  this.scoreLeft = 0;
+  this.scoreRight = 0;
 };
+
+Game.prototype.resetBall = function resetBall() {
+  this.ball = [config.FIELD_WIDTH / 2, config.FIELD_HEIGHT /2];
+}
 
 Game.prototype.start = function start() {
   this.status = STATUS_STARTED;
-  this.ball = [config.FIELD_WIDTH / 2, config.FIELD_HEIGHT /2];
+  this.resetBall();
   this.ballDelta = [random(config.INITIAL_BALL_SPEED), random(config.INITIAL_BALL_SPEED)];
   this.run();
   return this;
@@ -66,16 +72,26 @@ Game.prototype.step = function step() {
   var allowedMovesPerStep; 
   if (this.ball[0] >= config.FIELD_WIDTH - config.BALL_RADIUS - config.PADDLE_WIDTH) {
     if (this.ball[1] > this.paddleRight - config.PADDLE_HEIGHT/2 &&
-        this.ball[1] < this.paddleRight + config.PADDLE_HEIGHT/2) {
-          this.ballDelta[0] *= -1;
-          this.ballDelta[1] += (this.ball[1] - this.paddleRight) / config.ACCELORATOR;
+        this.ball[1] < this.paddleRight + config.PADDLE_HEIGHT/2)
+    {
+      this.ballDelta[0] *= -1;
+      this.ballDelta[1] += (this.ball[1] - this.paddleRight) / config.ACCELORATOR;
+    } else {
+      this.resetBall();
+      this.scoreLeft += 1;
+      return this;
     }
   }
   if (this.ball[0] <= config.BALL_RADIUS + config.PADDLE_WIDTH) {
     if (this.ball[1] > this.paddleLeft - config.PADDLE_HEIGHT/2 &&
-        this.ball[1] < this.paddleLeft + config.PADDLE_HEIGHT/2) {
-          this.ballDelta[0] *= -1;
-          this.ballDelta[1] += (this.ball[1] - this.paddleLeft) / config.ACCELORATOR;
+        this.ball[1] < this.paddleLeft + config.PADDLE_HEIGHT/2) 
+    {
+      this.ballDelta[0] *= -1;
+      this.ballDelta[1] += (this.ball[1] - this.paddleLeft) / config.ACCELORATOR;
+    } else {
+      this.resetBall();
+      this.scoreRight += 1;
+      return this;
     }
   }
 

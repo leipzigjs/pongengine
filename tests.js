@@ -48,6 +48,35 @@ describe('Game', function() {
     }, 10);
   });
 
+  it('should add one point to left player, if ball goes out on right side', function() {
+    game.ballDelta = [1, 0];
+    game.paddleRight = 0;
+    var x = game.config.FIELD_WIDTH - game.config.BALL_RADIUS -
+            game.config.PADDLE_WIDTH;
+    game.ball = [x-1, 100];
+    game.scoreLeft = 0;
+    game.step();
+    expect(game.scoreLeft).to.be.equal(0);
+    game.step();
+    expect(game.scoreLeft).to.be.equal(1);
+    var center = [game.config.FIELD_WIDTH / 2, game.config.FIELD_HEIGHT /2];
+    expect(game.ball).to.eql(center);
+  });
+
+  it('should add one point to right player, if ball goes out on left side', function() {
+    game.ballDelta = [-1, 0];
+    game.paddleLeft = 0;
+    var x = game.config.BALL_RADIUS + game.config.PADDLE_WIDTH;
+    game.ball = [x+1, 100];
+    game.scoreLeft = 0;
+    game.step();
+    expect(game.scoreRight).to.be.equal(0);
+    game.step();
+    expect(game.scoreRight).to.be.equal(1);
+    var center = [game.config.FIELD_WIDTH / 2, game.config.FIELD_HEIGHT /2];
+    expect(game.ball).to.eql(center);
+  });
+
   describe('Paddle', function() {
     it('should move, but only by player with secret', function () {
       var playerLeft = game.loginPlayer('left');
@@ -76,6 +105,16 @@ describe('Game', function() {
       expect(function() {
         game.moveDown(playerLeft.name, playerLeft.secret);
       }).to.not.throw(Error);
+    });
+
+    it('counter should not become value below 0', function() {
+      game.config.NUMBER_OF_STEPS = 1;
+      var playerLeft = game.loginPlayer('left');
+      game.moveDown(playerLeft.name, playerLeft.secret);
+      game.step();
+      expect(game.leftMoveCounter).to.not.be.below(0);
+      game.step();
+      expect(game.leftMoveCounter).to.not.be.below(0);
     });
   });
 
@@ -127,7 +166,8 @@ describe('Game', function() {
       game.ball = [x, 100];
       game.step();
       expect(game.ballDelta).to.be.eql([-1, 0]);
-      expect(game.ball[0]).to.be.below(x);
+      // ball reseted to center
+      expect(game.ball[0]).to.be.equal(game.config.FIELD_WIDTH/2);
     });
 
     it('should be reflected on right paddle', function() {
@@ -149,7 +189,8 @@ describe('Game', function() {
       game.ball = [x, 100];
       game.step();
       expect(game.ballDelta).to.be.eql([1, 0]);
-      expect(game.ball[0]).to.be.above(x);
+      // ball reseted to center
+      expect(game.ball[0]).to.be.equal(game.config.FIELD_WIDTH/2);
     });
   });
 });

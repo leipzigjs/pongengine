@@ -12,6 +12,11 @@ var config = {
   TIME_QUANTUM: 10,
   INITIAL_BALL_SPEED: 2,
   WAIT_BEFORE_START: 1000,
+
+  // these canstants determine, how many paddle moves are allowed in which
+  // number of steps
+  NUMBER_OF_PADDLE_MOVES: 10,
+  NUMBER_OF_STEPS: 10,
 };
 
 var STATUS_LOGIN = 'login';
@@ -44,6 +49,8 @@ var Game = function Game(customConfig) {
   this.players = {'left': null, 'right': null};
   this.status = STATUS_LOGIN;
   this.autoStart = true;
+  this.leftMoveCounter = 0;
+  this.rightMoveCounter = 0;
 };
 
 Game.prototype.start = function start() {
@@ -56,6 +63,7 @@ Game.prototype.start = function start() {
 
 
 Game.prototype.step = function step() {
+  var allowedMovesPerStep; 
   if (this.ball[0] >= config.FIELD_WIDTH - config.BALL_RADIUS - config.PADDLE_WIDTH) {
     if (this.ball[1] > this.paddleRight - config.PADDLE_HEIGHT/2 &&
         this.ball[1] < this.paddleRight + config.PADDLE_HEIGHT/2) {
@@ -77,6 +85,9 @@ Game.prototype.step = function step() {
       }
   this.ball[0] += this.ballDelta[0];
   this.ball[1] += this.ballDelta[1];
+  allowedMovesPerStep = config.NUMBER_OF_PADDLE_MOVES/config.NUMBER_OF_STEPS
+  this.leftMoveCounter = Math.max(this.leftMoveCounter - allowedMovesPerStep, 0);
+  this.rightMoveCounter = Math.max(this.rightMoveCounter - allowedMovesPerStep, 0);
   return this;
 }
 
@@ -117,12 +128,20 @@ Game.prototype.moveUp = function moveUp(playername, secret) {
 Game.prototype.move = function move(playername, secret, distance) {
   if (this.players.left.name === playername && 
       this.players.left.secret === secret) {
+        if (this.leftMoveCounter >= this.config.NUMBER_OF_PADDLE_MOVES) {
+          throw Error('too many moves');
+        }
         this.paddleLeft += distance;
+        this.leftMoveCounter += 1;
         return;
       }
   if (this.players.right.name === playername &&
       this.players.right.secret === secret) {
+        if (this.rightMoveCounter >= this.config.NUMBER_OF_PADDLE_MOVES) {
+          throw Error('too many moves');
+        }
         this.paddleRight += distance;
+        this.rightMoveCounter += 1;
         return;
       }
   throw Error('not your game');

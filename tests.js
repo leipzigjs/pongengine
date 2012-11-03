@@ -32,7 +32,7 @@ describe('Game', function() {
     expect(game.loginPlayer('two')).to.be.ok; 
     expect(function() {
       game.loginPlayer('three');
-    }).to.throw.error;
+    }).to.throw(Error);
   });
 
   it('should start the game, if two players log in', function(done) {
@@ -51,16 +51,31 @@ describe('Game', function() {
   describe('Paddle', function() {
     it('should move, but only by player with secret', function () {
       var playerLeft = game.loginPlayer('left');
-      var playerRight = game.loginPlayer('left');
+      var playerRight = game.loginPlayer('right');
       var posLeft = game.paddleLeft;
       var posRight = game.paddleLeft;
       game.moveDown(playerLeft.name, playerLeft.secret);
       expect(game.paddleLeft).to.be.above(posLeft);
       game.moveUp(playerRight.name, playerRight.secret);
       expect(game.paddleRight).to.be.below(posRight);
-      expect(function() {
+      expect(function movePaddleWithWrongSecrect() {
         game.moveUp(player.name, 'x');
-      }).to.throw.error;
+      }).to.throw(Error);
+    });
+
+    it('should can be moved only defined times in configured number of steps', function() {
+      game.config.NUMBER_OF_PADDLE_MOVES = 2;
+      game.config.NUMBER_OF_STEPS = 1;
+      var playerLeft = game.loginPlayer('left');
+      game.moveDown(playerLeft.name, playerLeft.secret);
+      game.moveDown(playerLeft.name, playerLeft.secret);
+      expect(function movePaddleToMuch() {
+        game.moveDown(playerLeft.name, playerLeft.secret);
+      }).to.throw(Error);
+      game.step();
+      expect(function() {
+        game.moveDown(playerLeft.name, playerLeft.secret);
+      }).to.not.throw(Error);
     });
   });
 

@@ -176,6 +176,25 @@ Game.prototype.move = function move(playername, secret, distance) {
   throw Error('not your game');
 };
 
+Game.prototype.getStatus = function getStatus() {
+  return {
+    'ball': this.ball,
+    'ballDelta': this.ballDelta,
+    'paddleLeft': this.paddleLeft,
+    'paddleRight': this.paddleRight,
+    'players': {
+      'left': this.players.left ? this.players.left.name : null,
+      'right': this.players.right ? this.players.right.name : null,
+    },
+    'status': this.status,
+    'autoStart': this.autoStart,
+    'leftMoveCounter': this.leftMoveCounter,
+    'rightMoveCounter': this.rightMoveCounter,
+    'scoreLeft': this.scoreLeft,
+    'scoreRight': this.scoreRight,
+  }
+}
+
 Game.prototype.config = config;
 
 module.exports = Game;

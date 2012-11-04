@@ -36,7 +36,7 @@ function getConfig(req, res, next) {
 }
 
 function getStatus(req, res, next) {
-  res.send(gameByKey(req.params.key));
+  res.send(gameByKey(req.params.key).getStatus());
 }
 
 function login(req, res, next) {

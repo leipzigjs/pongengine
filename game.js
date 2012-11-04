@@ -8,6 +8,7 @@ var config = {
   PADDLE_WIDTH: 10,
   PADDLE_STEP: 20,
   ACCELORATOR: 10,
+  ACCELORATE_PER_ROUND: 0.0001,
 
   TIME_QUANTUM: 10,
   INITIAL_BALL_SPEED: 2,
@@ -114,6 +115,9 @@ Game.prototype.step = function step() {
       }
   this.ball[0] += this.ballDelta[0];
   this.ball[1] += this.ballDelta[1];
+  this.ballDelta[0] *= 1 + config.ACCELORATE_PER_ROUND;
+  this.ballDelta[1] *= 1 + config.ACCELORATE_PER_ROUND;
+
   allowedMovesPerStep = config.NUMBER_OF_PADDLE_MOVES/config.NUMBER_OF_STEPS
   this.leftMoveCounter = Math.max(this.leftMoveCounter - allowedMovesPerStep, 0);
   this.rightMoveCounter = Math.max(this.rightMoveCounter - allowedMovesPerStep, 0);

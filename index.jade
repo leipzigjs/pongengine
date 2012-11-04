@@ -13,9 +13,9 @@ html
         var context;
         var x, y;
         var paddleLeft, paddleRight;
-        var radius = 10
-
+        var radius = 10;
         var config;
+
 
         function getHash() {
           var hash = window.location.hash;
@@ -47,6 +47,7 @@ html
         function updateField(err, status)
         {
           if (status) {
+            radius = config.BALL_RADIUS;
             circle(x, y, radius+1, 'white');
             rectangle(0, paddleLeft-config.PADDLE_HEIGHT/2, 
             config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'white');
@@ -65,7 +66,7 @@ html
           }
           setTimeout(function() {
             requestStatus(updateField);
-          }, 10);
+          }, 100);
         }
 
         function requestConfig(configDone) {

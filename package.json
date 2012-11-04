@@ -2,7 +2,7 @@
   "author": "Stephan Hoyer <ste.hoyer@gmail.com> (https://github.com/StephanHoyer)",
   "name": "pongengine",
   "description": "Pongengine in node.js with REST-API build on restify",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/leipzigjs/pongengine.git"

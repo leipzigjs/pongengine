@@ -67,7 +67,7 @@ describe('Game', function() {
     game.ballDelta = [-1, 0];
     game.paddleLeft = 0;
     var x = game.config.BALL_RADIUS + game.config.PADDLE_WIDTH;
-    game.ball = [x+1, 100];
+    game.ball = [x + 1, 100];
     game.scoreLeft = 0;
     game.step();
     expect(game.scoreRight).to.be.equal(0);
@@ -75,6 +75,18 @@ describe('Game', function() {
     expect(game.scoreRight).to.be.equal(1);
     var center = [game.config.FIELD_WIDTH / 2, game.config.FIELD_HEIGHT /2];
     expect(game.ball).to.eql(center);
+  });
+
+  it('should be won by player with x points', function() {
+    game.config.SCORE_TO_WIN = 1;
+    game.ballDelta = [-1, 0];
+    game.paddleLeft = 0;
+    var x = game.config.BALL_RADIUS + game.config.PADDLE_WIDTH;
+    game.ball = [x, 100];
+    game.scoreLeft = 0;
+    game.step();
+    expect(game.scoreRight).to.be.equal(1);
+    expect(game.status).to.equal('finished');
   });
 
   describe('Paddle', function() {
@@ -165,8 +177,8 @@ describe('Game', function() {
       var x = game.config.BALL_RADIUS + game.config.PADDLE_WIDTH;
       game.ball = [x, 100];
       game.step();
-      expect(game.ballDelta).to.be.eql([-1, 0]);
       // ball reseted to center
+      expect(game.ballDelta).to.not.be.eql([-1, 0]);
       expect(game.ball[0]).to.be.equal(game.config.FIELD_WIDTH/2);
     });
 
@@ -188,7 +200,7 @@ describe('Game', function() {
               game.config.PADDLE_WIDTH;
       game.ball = [x, 100];
       game.step();
-      expect(game.ballDelta).to.be.eql([1, 0]);
+      expect(game.ballDelta).to.not.be.eql([1, 0]);
       // ball reseted to center
       expect(game.ball[0]).to.be.equal(game.config.FIELD_WIDTH/2);
     });

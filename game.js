@@ -17,12 +17,14 @@ var config = {
   // number of steps
   NUMBER_OF_PADDLE_MOVES: 10,
   NUMBER_OF_STEPS: 10,
+
+  SCORE_TO_WIN: 10,
 };
 
 var STATUS_LOGIN = 'login';
 var STATUS_READY = 'ready';
 var STATUS_STARTED = 'started';
-var STATUS_FINISHED = 'finshed';
+var STATUS_FINISHED = 'finished';
 
 function random(value) {
   var direction = Math.random() < 0.5 ? -1 : 1;
@@ -57,17 +59,26 @@ var Game = function Game(customConfig) {
 
 Game.prototype.resetBall = function resetBall() {
   this.ball = [config.FIELD_WIDTH / 2, config.FIELD_HEIGHT /2];
+  this.ballDelta = [random(config.INITIAL_BALL_SPEED), random(config.INITIAL_BALL_SPEED)];
 }
 
 Game.prototype.start = function start() {
   this.status = STATUS_STARTED;
   this.resetBall();
-  this.ballDelta = [random(config.INITIAL_BALL_SPEED), random(config.INITIAL_BALL_SPEED)];
   this.run();
   return this;
 };
 
-
+Game.prototype.checkWinner = function checkWinner() {
+  if (this.scoreLeft >= config.SCORE_TO_WIN) {
+    this.status = STATUS_FINISHED;
+    this.winner = 'left';
+  }
+  if (this.scoreRight >= config.SCORE_TO_WIN) {
+    this.status = STATUS_FINISHED;
+    this.winner = 'right';
+  }
+}
 Game.prototype.step = function step() {
   var allowedMovesPerStep; 
   if (this.ball[0] >= config.FIELD_WIDTH - config.BALL_RADIUS - config.PADDLE_WIDTH) {
@@ -79,6 +90,7 @@ Game.prototype.step = function step() {
     } else {
       this.resetBall();
       this.scoreLeft += 1;
+      this.checkWinner();
       return this;
     }
   }
@@ -91,6 +103,7 @@ Game.prototype.step = function step() {
     } else {
       this.resetBall();
       this.scoreRight += 1;
+      this.checkWinner();
       return this;
     }
   }

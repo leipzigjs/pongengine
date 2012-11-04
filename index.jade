@@ -1,14 +1,13 @@
-<!DOCTYPE HTML>
-<html>
-  <head>
-    <title>Coding Contest - Pong</title>
-    <style>
+doctype 5
+html
+  head
+    title Coding Contest - Pong
+    style(type='text/css')
       #myCanvas { 
         border: 1px solid black;
         background: red
       }
-    </style>
-    <script>
+    script(type='text/javascript')
       (function() {
         var canvas;
         var context;
@@ -17,6 +16,19 @@
         var radius = 10
 
         var config;
+
+        function getHash() {
+          var hash = window.location.hash;
+          return hash.substring(1); // remove #
+        }
+
+        function getBaseUrl() {
+          return getHash().split('&')[0] || 'http://localhost:#{port}/';
+        }
+
+        function getGameName() {
+        return getHash().split('&')[1] || '#{game}';
+        }
 
         function circle(x, y, radius, color) {
           context.beginPath();
@@ -37,19 +49,19 @@
           if (status) {
             circle(x, y, radius+1, 'white');
             rectangle(0, paddleLeft-config.PADDLE_HEIGHT/2, 
-                      config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'white');
+            config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'white');
             rectangle(config.FIELD_WIDTH, paddleRight-config.PADDLE_HEIGHT/2, 
-                      config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'white');
+            config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'white');
             x = status.ball[0];
             y = status.ball[1];
             paddleLeft = status.paddleLeft;
             paddleRight = status.paddleRight;
             circle(x, y, radius, 'green');
             rectangle(0, paddleLeft-config.PADDLE_HEIGHT/2, 
-                      config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'red');
+            config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'red');
             rectangle(config.FIELD_WIDTH-config.PADDLE_WIDTH, 
-                      paddleRight-config.PADDLE_HEIGHT/2, 
-                      config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'blue');
+            paddleRight-config.PADDLE_HEIGHT/2, 
+            config.PADDLE_WIDTH, config.PADDLE_HEIGHT, 'blue');
           }
           setTimeout(function() {
             requestStatus(updateField);
@@ -57,16 +69,16 @@
         }
 
         function requestConfig(configDone) {
-          request('game/bar/config/', configDone);
+          request('game/' + getGameName() + '/config/', configDone);
         }
 
         function requestStatus(statusDone) {
-          request('game/bar/status/', statusDone);
+          request('game/' + getGameName() + '/status/', statusDone);
         }
 
         function request(url, requestDone) {
           var request = new XMLHttpRequest(); 
-          request.open('GET', 'http://localhost:8001/'+ url, true); ;
+          request.open('GET', getBaseUrl() + url, true); ;
           request.onreadystatechange = function () { ;
             if (request.readyState != 4 || request.status != 200) {
               return;
@@ -85,10 +97,5 @@
           });
         };
       }());
-    </script>
-  </head>
-  <body onmousedown="return false;">
-    <canvas id="field" width="800" height="600">
-    </canvas>
-  </body>
-</html>
+  body
+    canvas#field(width=800, height=600)

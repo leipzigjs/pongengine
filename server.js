@@ -1,5 +1,13 @@
+var fs = require('fs');
 var restify = require('restify');
+var jade = require('jade');
+
 var Game = require('./game');
+
+var SERVER_PORT = 8001;
+
+var template = fs.readFileSync(__dirname + '/index.jade', 'UTF-8');
+var indexTemplate = jade.compile(template);
 
 var games = {};
 function gameByKey(key) {
@@ -61,15 +69,29 @@ function moveUp(req, res, next) {
   }
 }
 
-var server = restify.createServer();
+function renderSpectatorHtml(req, res, next) {
+  res.contentType = 'text/html';
+  res.send(indexTemplate({
+    port: SERVER_PORT,
+    game: req.params.key,
+  }));
+}
+
+var server = restify.createServer({ 
+  formatters: {'text/html': function formatHtml(req, res, body) {
+      return body;
+  }}
+});
+
 server.get('/game/:key/config/', getConfig);
+server.get('/game/:key/', renderSpectatorHtml);
 server.get('/game/:key/start/', startGame);
 server.get('/game/:key/status/', getStatus);
 server.get('/game/:key/login/:playername/', login);
 server.put('/game/:key/up/:playername/:secret', moveUp);
 server.put('/game/:key/down/:playername/:secret', moveDown);
 
-server.listen(8001, function() {
+server.listen(SERVER_PORT, function() {
   console.log('%s listening at %s', server.name, server.url);
 });
 

@@ -12,7 +12,8 @@
     "test": "mocha tests.js"
   },
   "dependencies": {
-    "restify": "*"
+    "restify": "*",
+    "jade": "*"
   },
   "devDependencies": {
     "chai": "*",

@@ -9,6 +9,15 @@ function gameByKey(key) {
   return games[key];
 }
 
+(function removeFinishedGames() {
+  for (var i = 0; i < games.length; i++) {
+    if (game.status && game.status === 'finished') {
+      game.splice(i, 1);
+    }
+  }
+  setTimeout(removeFinishedGames, 1000);
+})();
+
 function startGame(req, res, next) {
   gameByKey(req.params.key).start();
   res.send('game started');

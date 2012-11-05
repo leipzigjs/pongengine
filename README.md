@@ -5,6 +5,8 @@ Pongengine is like, the name says, an engine that runs pong games on a node.js s
 It provides an restfull API to get the games status, to log in to the game and to control 
 the paddles.
 
+Any Questions? Drop me a line: **ste.hoyer(a)gmail.com.**
+
 The challenge
 -------------
 
@@ -15,7 +17,7 @@ The rules are:
 
 * Game configuration is variable: Fieldsize, ballspeed or any other value might change
 * One game everyone on everyone, the two with most wins go for one final playoff game
-* If there occur any bug in this code, they will get fixed, so stay tuned and test your code
+* If there occurs any bug in this code, it will get fixed, so stay tuned and test your code
   against the latest version available
 
 Installation

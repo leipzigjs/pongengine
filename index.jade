@@ -70,11 +70,11 @@ html
         }
 
         function requestConfig(configDone) {
-          request('game/' + getGameName() + '/config/', configDone);
+          request('game/' + getGameName() + '/config', configDone);
         }
 
         function requestStatus(statusDone) {
-          request('game/' + getGameName() + '/status/', statusDone);
+          request('game/' + getGameName() + '/status', statusDone);
         }
 
         function request(url, requestDone) {

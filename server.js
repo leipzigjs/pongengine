@@ -83,13 +83,13 @@ var server = restify.createServer({
   }}
 });
 
-server.get('/game/:key/config/', getConfig);
-server.get('/game/:key/', renderSpectatorHtml);
-server.post('/game/:key/start/', startGame);
-server.get('/game/:key/status/', getStatus);
-server.put('/game/:key/player/:playername/', login);
-server.post('/game/:key/player/:playername/:secret/up/', moveUp);
-server.post('/game/:key/player/:playername/:secret/down/', moveDown);
+server.get('/game/:key/config', getConfig);
+server.get('/game/:key', renderSpectatorHtml);
+server.post('/game/:key/start', startGame);
+server.get('/game/:key/status', getStatus);
+server.put('/game/:key/player/:playername', login);
+server.post('/game/:key/player/:playername/:secret/up', moveUp);
+server.post('/game/:key/player/:playername/:secret/down', moveDown);
 
 server.listen(SERVER_PORT, function() {
   console.log('%s listening at %s', server.name, server.url);

@@ -79,7 +79,7 @@ function renderSpectatorHtml(req, res, next) {
 
 var server = restify.createServer({ 
   formatters: {'text/html': function formatHtml(req, res, body) {
-      return body;
+      return '' + body;
   }}
 });
 
